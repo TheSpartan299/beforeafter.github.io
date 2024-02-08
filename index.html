@@ -38,8 +38,8 @@
     }
     
     #comparison {
-      width: 100%;
-      padding-bottom: 100%;
+      width: 120%;
+      padding-bottom: 80%;
       overflow: hidden; 
       position: relative;
     }
@@ -147,15 +147,15 @@
       position: relative;
       outline: none;    
     }
-    </style>
+</style>
 </head>
 <body>
 
 <div class="container">
   <div class="inputs-container">
-    <!-- Campos para ingresar las rutas de las imágenes -->
-    <input type="text" id="imageBefore" placeholder="Ruta de la imagen Antes">
-    <input type="text" id="imageAfter" placeholder="Ruta de la imagen Después">
+    <!-- Campos para cargar las imágenes -->
+    <input type="file" id="fileBefore" accept="image/*">
+    <input type="file" id="fileAfter" accept="image/*">
     <button onclick="updateImages()">Actualizar Imágenes</button>
   </div>
 
@@ -172,18 +172,30 @@
 var divisor = document.getElementById("divisor"),
     handle = document.getElementById("handle"),
     slider = document.getElementById("slider"),
-    imageBefore = document.getElementById("imageBefore"),
-    imageAfter = document.getElementById("imageAfter");
+    fileBefore = document.getElementById("fileBefore"),
+    fileAfter = document.getElementById("fileAfter");
 
 function moveDivisor() {
   handle.style.left = slider.value + "%";
   divisor.style.width = slider.value + "%";
 }
 
+function setImageBackground(imgElement, fileInput) {
+  if (fileInput.files && fileInput.files[0]) {
+    var reader = new FileReader();
+    
+    reader.onload = function(e) {
+      imgElement.style.backgroundImage = "url('" + e.target.result + "')";
+    }
+    
+    reader.readAsDataURL(fileInput.files[0]);
+  }
+}
+
 function updateImages() {
-  document.querySelector("figure").style.backgroundImage = "url('" + imageBefore.value + "')";
-  divisor.style.backgroundImage = "url('" + imageAfter.value + "')";
-  moveDivisor(); // Asegúrate de ajustar el divisor según el valor actual del deslizador
+  setImageBackground(document.querySelector("figure"), fileBefore);
+  setImageBackground(divisor, fileAfter);
+  moveDivisor(); 
 }
 
 window.onload = function() {
